@@ -1,7 +1,61 @@
 import React, { Component } from 'react';
-import {Card,Button} from 'react-bootstrap'
+import {Card,Button,ListGroup,ListGroupItem} from 'react-bootstrap'
+import { async } from 'regenerator-runtime';
 
 class Candidate extends Component {
+
+    constructor (props){
+        super(props)
+        this.state={
+            voteState:this.props.buttonState,
+            displayVote:'none',
+            voteTotal: '--'
+        }
+    }
+    alreadyVoted=async()=>{
+        let didVote=await window.contract.didVote()
+        if(!didVote){
+            this.setState({voteState:false})
+        }
+        else{
+            this.setState({displayVote:'block'})
+        }
+    }
+
+
+    addVote=async()=>{
+        this.props.modButton();
+        window.contract.addVote({Candidate:this.props.title})
+        this.setState({displayVote:'block'})
+
+    }
+
+    getTotal=async()=>{
+        let total= await window.contract.getVotes({candidate:this.props.title})
+        this.setState(
+            {
+                voteTotal:total
+            }
+        )
+
+        
+    }
+
+
+    componentDidmount(){
+        this.alreadyVoted()
+        this.getTotal()
+    }
+
+    componentDidUpdate(prevProps){
+        if(prevProps!==this.props){
+            this.setState({voteState:true})
+        }
+    }
+
+
+
+
     render() {
         return (
             <div>
@@ -12,7 +66,18 @@ class Candidate extends Component {
                     <Card.Text>
                         {this.props.description}
                     </Card.Text>
-                    <Button variant="primary">VOTE</Button>
+                    <Button onClick={this.addVote} disabled={this.props.voteState} variant="primary">VOTE</Button>
+
+                    <ListGroup style={{display:this.state.displayVote}}>
+                        <ListGroupItem>
+                            {(this.state.voteTotal)}
+                        </ListGroupItem>
+                    </ListGroup>
+
+
+
+
+
                 </Card.Body>
             </Card>
             </div>

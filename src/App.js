@@ -1,5 +1,5 @@
 import 'regenerator-runtime/runtime'
-import React from 'react'
+import React, {useState} from 'react'
 import { login, logout } from './utils'
 import './global.css'
 import './scss/AppStyle.scss'
@@ -7,6 +7,7 @@ import './scss/VotingUtils.scss'
 import './css/VotingUtils.css'
 
 import {Navbar,Nav,NavDropdown, Container, Col, Row} from 'react-bootstrap'
+import Subject from './Components/Subject'
 import Candidate from './Components/Candidate'
 import female from './assets/female.png'
 import male from './assets/male.png'
@@ -17,8 +18,16 @@ const { networkId } = getConfig(process.env.NODE_ENV || 'development')
 
 export default function App() {
 
-  let candidate1Desc = "BBM mag nanakaw wag nyo iboto mga bobo";
-  let candidate2Desc = "Let leni lead tama ang mindset";
+  const [buttonState,changeButtonState]=useState(true)
+
+  const modButton=()=>{
+    changeButtonState(
+      !buttonState
+    )
+  }
+
+  let candidate1Desc = "BBM UNITY IS THE KEY";
+  let candidate2Desc = "Let leni lead";
 
   return (
   <React.Fragment>
@@ -27,8 +36,9 @@ export default function App() {
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="#features">Features</Nav.Link>
-              <Nav.Link href="#pricing">Pricing</Nav.Link>
+              <Nav.Link onClick={(window.accountId==='')?login:logout} eventKey={2}>
+                {(window.accountId==='')?'Login':window.accountId}
+              </Nav.Link>
               <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
@@ -48,9 +58,9 @@ export default function App() {
 
     <Container className='votingBooth'>
       <Row>
-        <Col className='d-flex justify-content-center'><Candidate title={"BANO BBM"} description={candidate1Desc} picture={male}/></Col>
-        <Col className='d-flex justify-content-center'>Voting Subject</Col>
-        <Col className='d-flex justify-content-center'><Candidate title={"LENI BRODREDO"} description={candidate2Desc} picture={female}/></Col>
+        <Col className='d-flex justify-content-center'><Candidate modButton ={modButton} buttonState={buttonState} title={"BBM"} description={candidate1Desc} picture={male}/></Col>
+        <Col className='d-flex justify-content-center'><Subject subject="who's your favorite?"/></Col>
+        <Col className='d-flex justify-content-center'><Candidate modButton ={modButton} buttonState={buttonState} title={"LENI"} description={candidate2Desc} picture={female}/></Col>
       </Row>
     </Container>
   </React.Fragment>

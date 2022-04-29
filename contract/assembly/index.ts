@@ -27,12 +27,14 @@ export function addVote(Candidate:string):i32{
     if(!candidateReg.contains(Candidate))
     {
       candidateReg.set(Candidate,1)
+      logging.log('Candidate Added and Thank you for Voting')
     }
     else
     {
       let currCount = candidateReg.getSome(Candidate);
       currCount = currCount + 1;
       candidateReg.set(Candidate,currCount);
+      logging.log('Thank you for Voting')
     }
   }
   else
@@ -41,3 +43,18 @@ export function addVote(Candidate:string):i32{
   }
   return candidateReg.getSome(Candidate)
 }
+
+export function getVotes(Candidate:string):i32{
+  if (candidateReg.contains(Candidate))
+  {
+    return candidateReg.getSome(Candidate)
+
+  }
+  else{return 0}
+
+}
+
+export function didVote():bool{
+  return voterReg.contains(Context.sender)
+}
+ 

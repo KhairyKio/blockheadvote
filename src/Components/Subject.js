@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import {Card} from 'react-bootstrap'
 
 const Subject=(props)=> {
         return (
-            <div>
-                
-            </div>
+            <Card className='text-center'>
+                <Card.Body className='d-flex align-items-center'>
+                    {props.subject}
+                </Card.Body>
+            </Card>
         );
     }
 
